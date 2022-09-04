@@ -3,9 +3,40 @@
     flat
     class="mt-5"
   >
+
     <v-form>
+     <v-card-title class="flex-nowrap">
+          <v-icon class="text--primary me-3">
+            {{ icons.mdiKeyOutline }}
+          </v-icon>
+          <span class="text-break">Change password</span>
+        </v-card-title>
       <div class="px-3">
+
+          <!-- alert -->
+          <v-col cols="12">
+            <v-alert
+              color="warning"
+              text
+              class="mb-0"
+               v-if="errors != null"
+            >
+              <div class="d-flex align-start">
+                <v-icon color="warning">
+                  {{ icons.mdiAlertOutline }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                   {{ errors }}
+                  </p>
+                  </a>
+                </div>
+              </div>
+            </v-alert>
+          </v-col>
+
         <v-card-text class="pt-5">
+
           <v-row>
             <v-col
               cols="12"
@@ -14,7 +45,7 @@
             >
               <!-- current password -->
               <v-text-field
-                v-model="currentPassword"
+                v-model="user.old_password"
                 :type="isCurrentPasswordVisible ? 'text' : 'password'"
                 :append-icon="isCurrentPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
                 label="Current Password"
@@ -25,7 +56,7 @@
 
               <!-- new password -->
               <v-text-field
-                v-model="newPassword"
+                v-model="user.password"
                 :type="isNewPasswordVisible ? 'text' : 'password'"
                 :append-icon="isNewPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
                 label="New Password"
@@ -38,7 +69,7 @@
 
               <!-- confirm password -->
               <v-text-field
-                v-model="cPassword"
+                v-model="user.password_confirmation"
                 :type="isCPasswordVisible ? 'text' : 'password'"
                 :append-icon="isCPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
                 label="Confirm New Password"
@@ -70,12 +101,7 @@
       <v-divider></v-divider>
 
       <div class="pa-3">
-        <v-card-title class="flex-nowrap">
-          <v-icon class="text--primary me-3">
-            {{ icons.mdiKeyOutline }}
-          </v-icon>
-          <span class="text-break">Two-factor authentication</span>
-        </v-card-title>
+
 
         <v-card-text class="two-factor-auth text-center mx-auto">
           <v-avatar
@@ -91,12 +117,10 @@
             </v-icon>
           </v-avatar>
           <p class="text-base text--primary font-weight-semibold">
-            Two factor authentication is not enabled yet.
+            Change password
           </p>
           <p class="text-sm text--primary">
-            Two-factor authentication adds an additional layer of
-            security to your account by requiring more than just a
-            password to log in. Learn more.
+            To change your current password, you must fill in the following fields correctly
           </p>
         </v-card-text>
 
@@ -105,6 +129,7 @@
           <v-btn
             color="primary"
             class="me-3 mt-3"
+            @click="EditProfil()"
           >
             Save changes
           </v-btn>
@@ -121,37 +146,69 @@
   </v-card>
 </template>
 
+
+
 <script>
-// eslint-disable-next-line object-curly-newline
-import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
+import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline, mdiAlertOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 
-export default {
-  setup() {
-    const isCurrentPasswordVisible = ref(false)
-    const isNewPasswordVisible = ref(false)
-    const isCPasswordVisible = ref(false)
-    const currentPassword = ref('12345678')
-    const newPassword = ref('87654321')
-    const cPassword = ref('87654321')
+import { mapGetters, mapActions } from "vuex";
 
-    return {
-      isCurrentPasswordVisible,
-      isNewPasswordVisible,
-      currentPassword,
-      isCPasswordVisible,
-      newPassword,
-      cPassword,
+export default {
+
+  data: () => ({
+      isCurrentPasswordVisible: false,
+      isNewPasswordVisible: false,
+      isCPasswordVisible: false,
+      errors: null,
+      user: {
+        password: null,
+        old_password: null,
+        password_confirmation: null,
+      },
+      defaultUser: {
+        password: null,
+        old_password: null,
+        password_confirmation: null,
+      },
       icons: {
         mdiKeyOutline,
         mdiLockOpenOutline,
         mdiEyeOffOutline,
         mdiEyeOutline,
+        mdiAlertOutline
       },
-    }
+  }),
+  computed: {
+    ...mapGetters([
+    ]),
+  },
+  created() {
+
+  },
+  methods: {
+    ...mapActions([
+      "resetPassword"
+    ]),
+  EditProfil(){
+      this.resetPassword(this.user).then((response) => {
+              this.$toast.success("Password changed successfully !", {
+                position: "top-right",
+                timeout: 5000,
+                draggable: true,
+                draggablePercent: 0.6,
+              });
+              this.errors = null
+             this.user = Object.assign({}, this.defaultUser)
+        }).catch(error=> {
+          this.errors = error;
+        });
+
+    },
   },
 }
 </script>
+
 
 <style lang="scss" scoped>
 .two-factor-auth {

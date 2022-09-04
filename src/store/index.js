@@ -7,13 +7,17 @@ Vue.use(Vuex)
 import auth from "./modules/auth";
 import users from "./modules/users";
 import roles from "./modules/roles";
+import positions from "./modules/positions";
+import permissions from "./modules/permissions";
+import department from "./modules/department";
+
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  getters:{ },
-  
-  modules: {auth,   users, roles},
-  plugins: [createPersistedState()]
+    state: {},
+    mutations: {},
+    actions: {},
+    getters: {},
+
+    modules: { auth, users, roles, positions, permissions, department },
+    plugins: [createPersistedState()]
 })

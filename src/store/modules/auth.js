@@ -1,11 +1,15 @@
 import "@/plugins/axios";
+import store from "@/store"
+
 
 export default {
     state: {
-       user:null, 
-       token:null,
-       loggedIn:false,
+        user: null,
+        token: null,
+        loggedIn: false,
     },
+
+
     mutations: {
         SET_USER(state, user) {
             state.user = user;
@@ -41,24 +45,78 @@ export default {
                     })
                     .catch((error) => {
                         reject(error);
+
                     });
             });
-            
         },
-        logout({ commit }) {             
-             return new Promise((resolve, reject) => {
-                 axios
-                     .post("logout")
-                     .then((response) => {
-                         commit("LOGOUT");
-                         localStorage.removeItem("user");
-                         localStorage.removeItem("token");
-                         resolve(response);
-                     })
-                     .catch((error) => {
-                         reject(error);
-                     });
-             });
+        logout({ commit }) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .post("logout")
+                    .then((response) => {
+                        commit("LOGOUT");
+                        localStorage.removeItem("user");
+                        localStorage.removeItem("token");
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
+        async forget({ commit }, { email }) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .post('forget', {
+                        email
+                    })
+                    .then((response) => {
+                        console.log(response)
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error.response.data.message);
+                    });
+            });
+        },
+        async reset({ commit }, objet) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .post('resetPassword', objet)
+                    .then((response) => {
+                        console.log(response)
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error.response.data.message);
+                    });
+            });
+        },
+        async AdminResetPassword(context, user) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .put("/admin/reset/password/" + user.id)
+                    .then((response) => {
+                        context.commit("update_User", user);
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error.response.data.message);
+                    });
+            });
+        },
+        async resetPassword(context, reset_password) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .put("/reset/password/" + store.getters.user.id, reset_password)
+                    .then((response) => {
+                        context.commit("SET_USER", response.data);
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error.response.data.message);
+                    });
+            });
         },
     },
     getters: {

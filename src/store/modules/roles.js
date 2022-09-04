@@ -2,7 +2,8 @@ import "@/plugins/axios";
 
 export default {
     state: {
-        listRoles: []
+        listRoles: [],
+        roles: []
     },
     getters: {
         getAllRoles: state => state.listRoles,
@@ -10,7 +11,7 @@ export default {
     mutations: {
         setListRoles: (state, roles) => state.listRoles = roles,
         RefreshListRoles: (state, id_role) => state.listRoles = state.listRoles.filter(t => id_role !== t.id),
-        add_Role(state, role) {
+        add_role(state, role) {
             state.listRoles.push(role);
         },
         update_Role(state, role) {
@@ -24,6 +25,9 @@ export default {
             if (index > -1) {
                 state.listRoles[index] = role;
             }
+        },
+        affect_Role(state, roles) {
+            state.roles.push(roles);
         },
     },
 
@@ -41,18 +45,41 @@ export default {
                 .post("/roles", role)
                 .then((response) => {
                     context.commit("add_role", {
-                        id: response.data.id,
-                        ...role
+                        id: response.data.role.id,
+                        ...response.data.role
                     });
+                    console.log(response.data.role.id);
+                });
+        },
+        async deletePermissionRole({ commit }, role) {
+            return axios
+                .delete("/roles/affect/" + role.id)
+                .then(() => {
+                    commit('RefreshListRoles', role.id);
                 });
         },
         async updateRole(context, role) {
             return axios
                 .put("/roles/" + role.id, role)
                 .then((response) => {
-                    context.commit("update_role", role);
+                    context.commit("update_Role", response.data);
                 });
-
+        },
+        async AffectPermissions(context, role, tab_permission) {
+            console.log(tab_permission)
+            return axios
+                .post("/roles/affect/", role.id, tab_permission)
+                .then((response) => {
+                    context.commit("affect_Role", tab_permission)
+                    console.log(response.data.role.id);
+                });
+        },
+        async AffectPermissionsRole(context, rolePerm) {
+            return axios
+                .post("/roles/affectPerm", rolePerm)
+                .then((response) => {
+                    context.commit("affect_Role", rolePerm)
+                });
         },
         async detailsRole(context, role) {
             return axios
@@ -60,7 +87,13 @@ export default {
                 .then((response) => {
                     context.commit("details_role", role);
                 });
-
+        },
+        async archiveRole({ commit }, role) {
+            return axios
+                .put("/role/archive/" + role.id)
+                .then((response) => {
+                    commit('RefreshListRoles', role.id);
+                });
         },
     },
 }

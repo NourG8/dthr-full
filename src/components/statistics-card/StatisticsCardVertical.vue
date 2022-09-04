@@ -29,7 +29,7 @@
 
     <v-card-text class="text-no-wrap text--primary mt-3">
       <p class="font-weight-semibold text-sm mb-1">
-        {{ statTitle }}
+        {{ statTitle }} 
       </p>
 
       <div class="d-flex align-end flex-wrap">

@@ -53,7 +53,6 @@ export default {
   },
   setup() {
     const tab = ref('')
-
     // tabs
     const tabs = [
       { title: 'Account', icon: mdiAccountOutline },

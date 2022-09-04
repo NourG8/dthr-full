@@ -15,9 +15,9 @@
         class="d-flex align-center text-decoration-none"
       >
         <v-img
-          :src="require('@/assets/images/logos/logo.svg')"
-          max-height="30px"
-          max-width="30px"
+          :src="require('@/assets/images/logos/digitrends.png')"
+          max-height="40px"
+          max-width="40px"
           alt="logo"
           contain
           eager
@@ -39,7 +39,7 @@
     >
       <nav-menu-link
         title="Dashboard"
-        :to="{ name: 'dashboard' }"
+        :to="{ name: 'Dashboard' }"
         :icon="icons.mdiHomeOutline"
       ></nav-menu-link>
       <nav-menu-link
@@ -71,12 +71,27 @@
       <nav-menu-link
         title="Users"
         :to="{ name: 'users' }"
-        :icon="icons.mdiAlphaTBoxOutline"
+        :icon="icons.mdiAccountGroup"
       ></nav-menu-link>
        <nav-menu-link
         title="Roles"
         :to="{ name: 'roles' }"
-        :icon="icons.mdiAlphaTBoxOutline"
+        :icon="icons.mdiAccountDetails"
+      ></nav-menu-link>
+      <nav-menu-link
+        title="Permissions"
+        :to="{ name: 'permissions' }"
+        :icon="icons.mdiAccountKey"
+      ></nav-menu-link>
+        <nav-menu-link
+        title="Positions"
+        :to="{ name: 'positions' }"
+        :icon="icons.mdiBriefcase"
+      ></nav-menu-link>
+        <nav-menu-link
+        title="Departments"
+        :to="{ name: 'departments' }"
+        :icon="icons.mdiSitemap"
       ></nav-menu-link>
       <nav-menu-link
         title="Icons"
@@ -99,7 +114,7 @@
         :icon="icons.mdiFormSelect"
       ></nav-menu-link>
     </v-list>
-   
+
   </v-navigation-drawer>
 </template>
 
@@ -114,6 +129,11 @@ import {
   mdiFileOutline,
   mdiFormSelect,
   mdiAccountCogOutline,
+  mdiAccountDetails,
+  mdiAccountGroup,
+  mdiBriefcase,
+  mdiAccountKey,
+  mdiSitemap
 } from '@mdi/js'
 import NavMenuSectionTitle from './components/NavMenuSectionTitle.vue'
 import NavMenuGroup from './components/NavMenuGroup.vue'
@@ -142,6 +162,11 @@ export default {
         mdiFileOutline,
         mdiFormSelect,
         mdiAccountCogOutline,
+        mdiAccountDetails,
+        mdiAccountGroup,
+        mdiBriefcase,
+        mdiAccountKey,
+        mdiSitemap
       },
     }
   },

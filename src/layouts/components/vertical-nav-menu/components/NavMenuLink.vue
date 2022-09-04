@@ -9,12 +9,12 @@
         :class="{'alternate-icon-small': !icon}"
         class="mx-auto"
       >
-        {{ icon || alternateIcon }}
+        {{ icon || alternateIcon }} 
       </v-icon>
     </v-list-item-icon>
 
     <v-list-item-title>
-      {{ title }}
+      {{ title }} 
     </v-list-item-title>
   </v-list-item>
 </template>

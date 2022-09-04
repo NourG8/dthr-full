@@ -1,3 +1,5 @@
+
+
 <template>
   <v-menu
     offset-y
@@ -6,6 +8,9 @@
     min-width="230"
     content-class="user-profile-menu-content"
   >
+
+
+
     <template v-slot:activator="{ on, attrs }">
       <v-badge
         bottom
@@ -16,6 +21,7 @@
         class="ms-4"
         dot
       >
+
         <v-avatar
           size="40px"
           v-bind="attrs"
@@ -144,18 +150,58 @@ import {
   mdiLogoutVariant,
   mdiAccountEdit
 } from '@mdi/js'
-
+import { mixin as clickaway } from 'vue-clickaway'
 import "@/store/index";
 export default { 
+  mixins: [ clickaway ],
+  data() {
+    return {
+      isVisible: false,
+      focusedIndex: 0,
+    }
+  },
    methods: {  
     fireLogout(){
-   this.$store.dispatch("logout").then((response) => {
-                console.log(response);
+        this.$store.dispatch("logout").then((response) => {
                 this.$router.push("/");
             });
+    },
+    toggleVisibility() {
+      this.isVisible = !this.isVisible
+    },
+    hideDropdown() {
+      this.isVisible = false
+      this.focusedIndex = 0
+    },
+    startArrowKeys() {
+      if (this.isVisible) {
+        // this.$refs.account.focus()
+        this.$refs.dropdown.children[0].children[0].focus()
+      }
+    },
+    focusPrevious(isArrowKey) {
+      this.focusedIndex = this.focusedIndex - 1
+      if (isArrowKey) {
+        this.focusItem()
+      }
+    },
+    focusNext(isArrowKey) {
+      this.focusedIndex = this.focusedIndex + 1
+      if (isArrowKey) {
+        this.focusItem()
+      }
+    },
+    focusItem() {
+      this.$refs.dropdown.children[this.focusedIndex].children[0].focus()
+    },
+    setLocale(locale) {
+      this.$i18n.locale = locale
+      this.$router.push({
+        params: { lang: locale }
+      })
+      this.hideDropdown()
     }
    },
-
   setup() {
     return {
       icons: {
@@ -180,4 +226,11 @@ export default {
     min-height: 2.5rem !important;
   }
 }
+ .dropdown-fade-enter-active, .dropdown-fade-leave-active {
+    transition: all .1s ease-in-out;
+  }
+  .dropdown-fade-enter, .dropdown-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
 </style>
